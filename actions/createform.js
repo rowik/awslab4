@@ -5,7 +5,7 @@ var S3Form = require("../s3post").S3Form;
 var AWS_CONFIG_FILE = "config.json";
 var POLICY_FILE = "policy.json";
 var INDEX_TEMPLATE = "index.ejs";
-
+var KEY_FIELD_NAME="AWSAcessKeyId";
 
 var task = function(request, callback){
 	//1. load configuration
@@ -19,6 +19,9 @@ var task = function(request, callback){
 	var s3Form= new S3Form(policy);
 	//4. get bucket name
 	var fields=s3form.generateS3FormFields();
+	
+	
+	fields.push(s3Form.addHiddenField(KEY_FIELD_NAME, awsConfig.accessKeyId));
 	
 	bucket=policy.getConditionValueByKey("bucket");
 	
