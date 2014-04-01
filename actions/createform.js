@@ -16,7 +16,7 @@ var task = function(request, callback){
 	var policy =new Policy(policyData);
 
 	//3. generate form fields for S3 POST
-	var s3Form= new 
+	var s3Form= new S3Form();
 	//4. get bucket name
 	
 
