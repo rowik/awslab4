@@ -5,7 +5,7 @@ var KEY_PARAM_NAME = "key";
 
 
 
-AWS.config.loadFromPath('./config.json');
+AWS.config.loadFromPath('config.json');
 
 var task =  function(request, callback){
 
