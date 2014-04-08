@@ -2,10 +2,6 @@ var util = require("util");
 var moment = require("moment");
 var helpers = require("./helpers");
 
-var ACCESS_KEY_FIELD_NAME = "AWSAccessKeyId";
-var POLICY_FIELD_NAME = "policy";
-var SIGNATURE_FIELD_NAME = "signature";
-
 var Policy = function(policyData){
 	this.policy = policyData;	
 	this.policy.expiration = moment().add(policyData.expiration).toJSON();
@@ -40,12 +36,12 @@ var S3Form = function(policy){
 		console.log("policy instanceof Policy");
 		throw new Error("policy instanceof Policy");
 	}
-	
+
 }
 
 S3Form.prototype.generateS3FormFields = function() {
 	var conditions =this.policy.getConditions();
-	
+
 	var formFields = [];
 
 	conditions.forEach(function(elem){
@@ -60,32 +56,15 @@ S3Form.prototype.generateS3FormFields = function() {
 			 	formFields.push(hiddenField(key, value));
 		}	
 	});
-	
+
 	return formFields;	
 }
 
-S3Form.prototype.generateS3CredientalsFields = function(awsConfig){
-	var fields = [];
-	fields.push(hiddenField(
-		ACCESS_KEY_FIELD_NAME, awsConfig.accessKeyId));
-
-	fields.push(hiddenField(
-		POLICY_FIELD_NAME, this.policy.generateEncodedPolicyDocument()));
-
-	fields.push(hiddenField(
-		SIGNATURE_FIELD_NAME, this.policy.generateSignature(awsConfig.secretAccessKey)));
-	return fields;
-}
-
+S3Form.prototype.addHiddenField = hiddenField;
 
 var hiddenField = function(fieldName, value) {
 	return {name: fieldName, value : value};
 }
 
-S3Form.prototype.addHiddenField = hiddenField;
-
-
-
 exports.Policy = Policy; // usage: policy = new Policy(policyData);
 exports.S3Form = S3Form; // usage: s3Form = new S3Form(awsConfig, policy);
-
